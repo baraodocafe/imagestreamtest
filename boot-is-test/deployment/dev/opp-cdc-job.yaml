@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: opp-cdc-signaling
+    job-name: opp-cdc-signaling
+  name: opp-cdc-signaling
+  namespace: ignite
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        job-name: opp-cdc-signaling
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+        prometheus.io/path: '/actuator/prometheus'
+    spec:
+      serviceAccountName: ignite-sa
+      restartPolicy: Never
+      containers:
+      - name:  opp-cdc-signaling
+        image: registry.ng.bluemix.net/sales-data-development/opp-cdc-signaling:1.0.0
+        imagePullPolicy: Always
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: KAFKA_SASL_JAAS_CONFIG
+            valueFrom:
+              secretKeyRef:
+                name: kafka-secret
+                key: SASL_JAAS_CONFIG
+          - name: RESTATEMENT_ID
+            value: "1"
+          - name: SIGNAL_TYPE
+            value: "BEGIN"
+        command:
+          - "java"
+          #- "-Dlogging.config=/log4j2.xml"
+          - "-jar"
+          - "opp-cdc-signaling.jar"
+          - "--spring.config.location=/config.yaml"
+        volumeMounts:
+          - name: config-map
+            mountPath: /config.yaml
+            subPath: config.yaml
+          - name: config-map
+            mountPath: /log4j2.xml
+            subPath: log4j2.xml
+          - name: config-map
+            mountPath: /logpattern.json
+            subPath: logpattern.json
+          - name: logs-vol
+            mountPath: logs/opp-cdc-signaling
+            subPath: logs/opp-cdc-signaling
+      volumes:
+        - name: logs-vol
+          persistentVolumeClaim:
+            claimName: pvc
+        - name: config-map
+          configMap:
+            name: opp-cdc-signaling-cm
+      imagePullSecrets:
+          - name: bluemix-default-secret

@@ -1,0 +1,72 @@
+{
+	"opportunity_number": "91-L33IMRJ",
+	"restatement_id": "1b98aa92-340b-4641-810f-a76bf2be00b6",
+	"lineitems": [
+		{
+			"id": "b63b6689-661f-4296-053a-5df091e881c1",
+			"restatement_meta_data": [
+				{
+					"dimension": "SAQ_EXTRACT",
+					"key": "THINK_SEGMENT_DESCR:SAQ|MODEL_DESCR:AgeDD|COMPONENT_ID:b63b6689-661f-4296-053a-5df091e881c1"
+				},
+				{
+					"dimension": "OPP_WINPLAN_FACT",
+					"key": "OPP_NO:91-L33IMRJ"
+				},
+				{
+					"dimension": "DIM_PROD_CATG_GROUP",
+					"key": "DIM_PROD_CATG_GROUP_KEY:58343|PROD_CATG_KEY:30465"
+				},
+				{
+					"dimension": "FCST_ROADMAP",
+					"key": "ROADMAP_ID:b63b6689-661f-4296-053a-5df091e881c1"
+				},
+				{
+					"dimension": "DIM_PROD_CATG_GROUP",
+					"key": "DIM_PROD_CATG_GROUP_KEY:58287|PROD_CATG_KEY:30465"
+				},
+				{
+					"dimension": "DIM_CUSTOMER",
+					"key": "SAP_CUSTOMER_NO:0036182132"
+				},
+				{
+					"dimension": "DIM_CUSTOMER",
+					"key": "SAP_CUSTOMER_NO:0036182132"
+				},
+				{
+					"dimension": "OPP_WINPLAN_FACT",
+					"key": "OPP_NO:91-L33IMRJ"
+				},
+				{
+					"dimension": "FCST_ROADMAP",
+					"key": "ROADMAP_ID:b63b6689-661f-4296-053a-5df091e881c1"
+				}
+			]
+		},
+		{
+			"id": "cd91d1cd-b61a-9d70-9f66-5df090701004",
+			"restatement_meta_data": [
+				{
+					"dimension": "SAQ_EXTRACT",
+					"key": "THINK_SEGMENT_DESCR:SAQ|MODEL_DESCR:AgeDD|COMPONENT_ID:cd91d1cd-b61a-9d70-9f66-5df090701004"
+				},
+				{
+					"dimension": "OPP_WINPLAN_FACT",
+					"key": "OPP_NO:91-L33IMRJ"
+				},
+				{
+					"dimension": "DIM_CUSTOMER",
+					"key": "SAP_CUSTOMER_NO:0036182132"
+				},
+				{
+					"dimension": "DIM_CUSTOMER",
+					"key": "SAP_CUSTOMER_NO:0036182132"
+				},
+				{
+					"dimension": "OPP_WINPLAN_FACT",
+					"key": "OPP_NO:91-L33IMRJ"
+				}
+			]
+		}
+	]
+}

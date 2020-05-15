@@ -1,0 +1,89 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: opp-cdc-signaling-cm
+  namespace: ignite
+  labels:
+    component: opp-cdc-signaling
+data:
+  config.yaml: |
+    management.endpoint.metrics.enabled: true
+    management.endpoint.prometheus.enabled: true
+    management.metrics.export.prometheus.enabled: true
+    management.endpoints.enabled-by-default: false
+    management.endpoints.web.exposure.include: "prometheus"
+    application:
+      producer:
+        bootstrap.servers: kafka-0.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093,kafka-1.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093,kafka-2.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093
+        sasl.jaas.config: ${SASL_JAAS_CONFIG}
+        security.protocol: SASL_SSL
+        ssl.protocol: TLSv1.2
+        ssl.enabled.protocols: TLSv1.2
+        ssl.endpoint.identification.algorithm: HTTPS
+        sasl.mechanism: PLAIN
+        max.request.size: 30000000
+        compression.type: gzip
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: org.apache.kafka.common.serialization.StringSerializer
+        acks: "1"
+      topic:
+        output: cloud-dev-cdc-redesign
+      restatement.id: ${RESTATEMENT_ID}
+      signal.type: ${SIGNAL_TYPE}
+  log4j2.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <Configuration status="WARN">
+        <Appenders>
+            <Console name="Console" target="SYSTEM_OUT">
+                <PatternLayout
+                        pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+            </Console>
+            <RollingFile name="RollingFile" filename="logs/wrapper/{{ .Values.component  }}/${env:POD_NAME}/{{ .Values.component  }}.log"
+                         filepattern="logs/wrapper/{{ .Values.component  }}/${env:POD_NAME}/{{ .Values.component  }}-%d{MM-dd-yyyy}-%i.log.gz">
+                <LogstashLayout
+                    dateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                    templateUri="file:/logpattern.json" prettyPrintEnabled="false"
+                    stackTraceEnabled="true" />
+                <Policies>
+                    <SizeBasedTriggeringPolicy size="100MB" />
+                </Policies>
+                <DefaultRolloverStrategy max="20" />
+            </RollingFile>
+        </Appenders>
+        <Loggers>
+            <Logger name="com.ibm.cip.wrapper" level="info" additivity="false">
+                <AppenderRef ref="Console" />
+                <AppenderRef ref="RollingFile" />
+            </Logger>
+            <Logger name="com.ibm.cip.wrapper.services" level="info" additivity="false">
+                <AppenderRef ref="Console" />
+                <AppenderRef ref="RollingFile" />
+            </Logger>
+            <Root level="info">
+                <AppenderRef ref="Console"/>
+            </Root>
+        </Loggers>
+    </Configuration>
+    <!-- Logpattern for KIBANA configuration -->
+  logpattern.json: |
+    {
+      "mdc": "${json:mdc}",
+      "ndc": "${json:ndc}",
+      "exception": {
+        "exception_class": "${json:exceptionClassName}",
+        "exception_message": "${json:exceptionMessage}",
+        "stacktrace": "${json:exceptionStackTrace}"
+      },
+      "line_number": "${json:sourceLineNumber}",
+      "class": "${json:sourceClassName}",
+      "@version": 1,
+      "source_host": "${hostName}",
+      "message": "${json:message}",
+      "thread_name": "${json:threadName}",
+      "@timestamp": "${json:timestamp}",
+      "level": "${json:level}",
+      "file": "${json:sourceFileName}",
+      "method": "${json:sourceMethodName}",
+      "logger_name": "${json:loggerName}",
+      "stage": "{{ .Values.component }}"
+    }

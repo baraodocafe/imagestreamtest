@@ -1,0 +1,23 @@
+management.endpoint.metrics.enabled: true
+management.endpoint.prometheus.enabled: true
+management.metrics.export.prometheus.enabled: true
+management.endpoints.enabled-by-default: false
+management.endpoints.web.exposure.include: "prometheus"
+application:
+  producer:
+    bootstrap.servers: kafka-0.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093,kafka-1.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093,kafka-2.mh-crxvcrmikmfopjjxzgxtwjo.us-south.containers.appdomain.cloud:9093
+    sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
+    security.protocol: SASL_SSL
+    ssl.protocol: TLSv1.2
+    ssl.enabled.protocols: TLSv1.2
+    ssl.endpoint.identification.algorithm: HTTPS
+    sasl.mechanism: PLAIN
+    max.request.size: 30000000
+    compression.type: gzip
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+    acks: "1"
+  topic:
+    output: cloud-dev-cdc-redesign
+  restatement.id: ${RESTATEMENT_ID}
+  signal.type: ${SIGNAL_TYPE}
